@@ -14,11 +14,12 @@ namespace ValueMatcherTest
         
         public GeneticValueMatcher(int populationSize, float targetValue) : base(GenerateInitialPopulation(populationSize, targetValue - .5f * Range, targetValue + .5f * Range))
         {
+            TargetValue = targetValue;
         }
         
-        protected override Task RunGenerationalFitnessTest()
+        protected override async Task RunGenerationalFitnessTest()
         {
-            return null;
+            await Task.Yield();
         }
 
         protected override float GetIndividualFitness(GeneticValueMatcherIndividual individual)

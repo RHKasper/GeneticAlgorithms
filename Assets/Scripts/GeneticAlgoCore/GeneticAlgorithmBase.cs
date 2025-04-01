@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -21,8 +22,9 @@ namespace GeneticAlgoCore
             _individuals = initialPopulation;
         }
         
-        public async void RunGeneration()
+        public async Task RunGeneration()
         {
+            Debug.Log("Running generation " + CurrentGenerationNumber);
             // run fitness test
             await RunGenerationalFitnessTest();
          
@@ -38,6 +40,8 @@ namespace GeneticAlgoCore
             _individuals = CreateNextGeneration(fitnesses); 
             CurrentGenerationNumber++;
         }
+
+        public List<TIndividual> GetCopyOfIndividualsList() => _individuals.ToList();
         
         /// <summary>
         /// runs the fitness test for the generation. After this method completes, <see cref="GetIndividualFitness"/> is ready to be called
@@ -60,6 +64,8 @@ namespace GeneticAlgoCore
             HashSet<TIndividual> nextGeneration = new();
             List<TIndividual> parents = new();
 
+            Debug.Log($"Creating next generation with {EliteCount} elites, {crossoverCount} crossovers, and {mutantCount} mutants");
+            
             // get elites and parents
             for (int i = 0; i < stoppingPoint; i++)
             {
@@ -90,7 +96,6 @@ namespace GeneticAlgoCore
             {
                 nextGeneration.Add(CreateMutant(parents));
             }
-            
             Assert.AreEqual(EliteCount + crossoverCount + mutantCount, nextGeneration.Count);
             Assert.AreEqual(population, nextGeneration.Count);
 
