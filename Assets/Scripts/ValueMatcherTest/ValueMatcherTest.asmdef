@@ -1,0 +1,16 @@
+{
+    "name": "ValueMatcherTest",
+    "rootNamespace": "",
+    "references": [
+        "GUID:71954b5d8dc05324599119071d06c269"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
