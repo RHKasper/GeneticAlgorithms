@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.rhkasper.rk-unity-toolkit": {
+      "version": "https://github.com/RHKasper/com.rhkasper.rk-unity-toolkit.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "3ba6eea635284cc7c776c962ee920fe07ad296f1"
+    },
     "com.unity.ai.navigation": {
       "version": "2.0.6",
       "depth": 0,
