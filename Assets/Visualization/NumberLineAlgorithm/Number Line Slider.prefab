@@ -538,4 +538,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 2392579954370762906}
+  handle: {fileID: 671459938436517016}
+  fill: {fileID: 6935425481724166102}
   text: {fileID: 6421055901374654565}

@@ -71,7 +71,7 @@ namespace GeneticAlgoCore
             {
                 if (i < EliteCount)
                 {
-                    nextGeneration.Add(fitnesses[i].Item2);
+                    nextGeneration.Add((TIndividual)fitnesses[i].Item2.DeepCopy(GeneticIndividual.IndividualType.Elite));
                 }
 
                 if (i < parentsCount)

@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using Easing;
+using GeneticAlgoCore;
 using RKUnityToolkit.UIElements;
 using TMPro;
 using UnityEngine;
@@ -10,13 +13,84 @@ namespace Visualization.NumberLineAlgorithm
 {
     public class NumberLineSliderController : GenericListDisplay.ListItemController<GeneticValueMatcherIndividual>
     {
+        private const float EasingDurationSeconds = .5f;
+        private const float PauseDurationSeconds = .5f;
+        
         [SerializeField] private Slider slider;
+        [SerializeField] private Image handle;
+        [SerializeField] private Image fill;
         [SerializeField] private TextMeshProUGUI text;
+
+        private readonly Queue<GeneticValueMatcherIndividual> _valuesToShow = new();
+        private float _timeElapsedForCurrentValue;
+        private GeneticValueMatcherIndividual _target;
+        private GeneticValueMatcherIndividual _initial;
+
+        private void Start()
+        {
+            SetValue(0);
+        }
 
         protected override void OnDataSet(GeneticValueMatcherIndividual data)
         {
-            slider.value = data.Value;
-            text.text = Math.Round(data.Value, 2).ToString(CultureInfo.InvariantCulture);
+            if (_target != null)
+            {
+                _valuesToShow.Enqueue(data);
+            }
+            else
+            {
+                Debug.Log("Setting initial Data");
+                SetTarget(data);
+                SetValue(data.Value);
+            }
+        }
+
+        private void Update()
+        {
+            _timeElapsedForCurrentValue += Time.deltaTime;
+            
+            if (_valuesToShow.TryPeek(out _) && _timeElapsedForCurrentValue > EasingDurationSeconds + PauseDurationSeconds)
+            {
+                SetTarget(_valuesToShow.Dequeue());
+            }
+
+            if (_initial == null)
+            {
+                SetValue(_target.Value);
+            }
+            else
+            {
+                SetValue(_initial.Value + (_target.Value - _initial.Value) * EasingFunctions.EaseInSine(_timeElapsedForCurrentValue / EasingDurationSeconds));
+            }
+        }
+
+        private void SetTarget(GeneticValueMatcherIndividual newTarget)
+        {
+            _initial = _target;
+            _target = newTarget;
+            _timeElapsedForCurrentValue = 0;
+            SetColors(newTarget.Type);
+        }
+        
+        private void SetValue(float value)
+        {
+            slider.value = value;
+            text.text = Math.Round(value, 3).ToString(CultureInfo.InvariantCulture);
+        }
+
+        private void SetColors(GeneticIndividual.IndividualType type)
+        {
+            Color color = type switch
+            {
+                GeneticIndividual.IndividualType.Initial => Color.white,
+                GeneticIndividual.IndividualType.Elite => Color.cyan,
+                GeneticIndividual.IndividualType.Crossover => Color.yellow,
+                GeneticIndividual.IndividualType.Mutant => Color.green,
+                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+            };
+
+            fill.color = color;
+            handle.color = color;
         }
     }
 }

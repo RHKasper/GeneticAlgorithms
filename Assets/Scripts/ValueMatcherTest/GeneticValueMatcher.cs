@@ -32,7 +32,7 @@ namespace ValueMatcherTest
             HashSet<GeneticValueMatcherIndividual> individuals = new();
             for (int i = 0; i < populationSize; i++)
             {
-                individuals.Add(new GeneticValueMatcherIndividual(Random.Range(min, max)));
+                individuals.Add(new GeneticValueMatcherIndividual(Random.Range(min, max), GeneticIndividual.IndividualType.Initial));
             }
 
             return individuals;
@@ -49,7 +49,7 @@ namespace ValueMatcherTest
                 secondParentIndex = Random.Range(0, availableParents.Count);
             }
 
-            return new GeneticValueMatcherIndividual(.5f * (availableParents[firstParentIndex].Value + availableParents[secondParentIndex].Value));
+            return new GeneticValueMatcherIndividual(.5f * (availableParents[firstParentIndex].Value + availableParents[secondParentIndex].Value), GeneticIndividual.IndividualType.Crossover);
         }
 
         protected override GeneticValueMatcherIndividual CreateMutant(List<GeneticValueMatcherIndividual> availableParents)
@@ -58,7 +58,7 @@ namespace ValueMatcherTest
             float mutationFraction = Random.Range(-MaxMutationFraction, MaxMutationFraction);
             float mutationDelta = Range * mutationFraction;
 
-            return new GeneticValueMatcherIndividual(availableParents[parentIndex].Value + mutationDelta);
+            return new GeneticValueMatcherIndividual(availableParents[parentIndex].Value + mutationDelta, GeneticIndividual.IndividualType.Mutant);
         }
     }
 }
