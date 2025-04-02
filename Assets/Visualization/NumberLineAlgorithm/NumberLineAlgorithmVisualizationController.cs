@@ -14,7 +14,6 @@ namespace Visualization.NumberLineAlgorithm
         [SerializeField] private int numberOfGenerations = 25;
 
         private GeneticValueMatcher _geneticValueMatcher;
-        private bool _clicked = true;
         
         private void Start()
         {
@@ -24,12 +23,7 @@ namespace Visualization.NumberLineAlgorithm
 
         private async void Update()
         {
-            if (Input.anyKey)
-            {
-                _clicked = true;
-            }
-            
-            if (_clicked && _geneticValueMatcher.CurrentGenerationNumber < numberOfGenerations)// && Input.anyKeyDown)
+            if (_geneticValueMatcher.CurrentGenerationNumber < numberOfGenerations)
             {
                 await _geneticValueMatcher.RunGeneration();
                 genericListDisplay.DisplayList(_geneticValueMatcher.GetCopyOfIndividualsList(), numberLineSliderPrefab);

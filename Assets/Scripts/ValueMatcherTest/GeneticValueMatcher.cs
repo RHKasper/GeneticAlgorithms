@@ -38,27 +38,17 @@ namespace ValueMatcherTest
             return individuals;
         }
 
-        protected override GeneticValueMatcherIndividual CreateCrossover(List<GeneticValueMatcherIndividual> availableParents)
+        protected override GeneticValueMatcherIndividual CreateCrossover(GeneticValueMatcherIndividual parent1, GeneticValueMatcherIndividual parent2)
         {
-            int firstParentIndex = Random.Range(0, availableParents.Count);
-            int secondParentIndex = Random.Range(0, availableParents.Count);
-
-            // todo: make this deterministically choose two (technically, this could run forever if random always gave the same value)
-            while (secondParentIndex == firstParentIndex)
-            {
-                secondParentIndex = Random.Range(0, availableParents.Count);
-            }
-
-            return new GeneticValueMatcherIndividual(.5f * (availableParents[firstParentIndex].Value + availableParents[secondParentIndex].Value), GeneticIndividual.IndividualType.Crossover);
+            return new GeneticValueMatcherIndividual(.5f * (parent1.Value + parent2.Value), GeneticIndividual.IndividualType.Crossover);
         }
 
-        protected override GeneticValueMatcherIndividual CreateMutant(List<GeneticValueMatcherIndividual> availableParents)
+        protected override GeneticValueMatcherIndividual CreateMutant(GeneticValueMatcherIndividual parent)
         {
-            int parentIndex = Random.Range(0, availableParents.Count);
             float mutationFraction = Random.Range(-MaxMutationFraction, MaxMutationFraction);
             float mutationDelta = Range * mutationFraction;
 
-            return new GeneticValueMatcherIndividual(availableParents[parentIndex].Value + mutationDelta, GeneticIndividual.IndividualType.Mutant);
+            return new GeneticValueMatcherIndividual(parent.Value + mutationDelta, GeneticIndividual.IndividualType.Mutant);
         }
     }
 }

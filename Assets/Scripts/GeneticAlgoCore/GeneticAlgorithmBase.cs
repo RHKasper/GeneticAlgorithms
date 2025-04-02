@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 namespace GeneticAlgoCore
 {
@@ -13,16 +14,20 @@ namespace GeneticAlgoCore
         public int EliteCount = 2;
         public float CrossoverFraction = .8f;
         public float ParentsFraction = .5f;
-        private IReadOnlyCollection<TIndividual> _individuals;
+        protected IReadOnlyCollection<TIndividual> Individuals;
 
         public int CurrentGenerationNumber { get; private set; } = 0;
 
         public GeneticAlgorithmBase(HashSet<TIndividual> initialPopulation)
         {
-            _individuals = initialPopulation;
+            Individuals = initialPopulation;
         }
         
-        public async Task RunGeneration()
+        /// <summary>
+        /// returns fitnesses for the previous generation
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<Tuple<float, TIndividual>>> RunGeneration()
         {
             Debug.Log("Running generation " + CurrentGenerationNumber);
             // run fitness test
@@ -30,18 +35,20 @@ namespace GeneticAlgoCore
          
             // score individuals' fitnesses
             List<Tuple<float, TIndividual>> fitnesses = new();
-            foreach (TIndividual individual in _individuals)
+            foreach (TIndividual individual in Individuals)
             {
                 fitnesses.Add(new Tuple<float, TIndividual>(GetIndividualFitness(individual), individual));
             }
             fitnesses.Sort((f1, f2) => f1.Item1.CompareTo(f2.Item1));
             
             // create next generation
-            _individuals = CreateNextGeneration(fitnesses); 
+            Individuals = CreateNextGeneration(fitnesses); 
             CurrentGenerationNumber++;
+
+            return fitnesses;
         }
 
-        public List<TIndividual> GetCopyOfIndividualsList() => _individuals.ToList();
+        public List<TIndividual> GetCopyOfIndividualsList() => Individuals.ToList();
         
         /// <summary>
         /// runs the fitness test for the generation. After this method completes, <see cref="GetIndividualFitness"/> is ready to be called
@@ -55,7 +62,7 @@ namespace GeneticAlgoCore
         
         private HashSet<TIndividual> CreateNextGeneration(List<Tuple<float, TIndividual>> fitnesses)
         {
-            int population = _individuals.Count;
+            int population = Individuals.Count;
             int crossoverCount = Mathf.RoundToInt((population - EliteCount) * CrossoverFraction);
             int mutantCount = population - EliteCount - crossoverCount;
             int parentsCount = Mathf.RoundToInt(population * ParentsFraction);
@@ -86,7 +93,8 @@ namespace GeneticAlgoCore
             // create crossovers
             for (int i = 0; i < crossoverCount; i++)
             {
-                nextGeneration.Add(CreateCrossover(parents));
+                List<TIndividual> chosenParents = ChooseNRandomElements(parents, 2);
+                nextGeneration.Add(CreateCrossover(chosenParents[0], chosenParents[1]));
             }
 
             Assert.AreEqual(EliteCount + crossoverCount, nextGeneration.Count);
@@ -94,7 +102,8 @@ namespace GeneticAlgoCore
             // create mutants
             for (int i = 0; i < mutantCount; i++)
             {
-                nextGeneration.Add(CreateMutant(parents));
+                TIndividual chosenParent = parents[Random.Range(0, parents.Count)];
+                nextGeneration.Add(CreateMutant(chosenParent));
             }
             Assert.AreEqual(EliteCount + crossoverCount + mutantCount, nextGeneration.Count);
             Assert.AreEqual(population, nextGeneration.Count);
@@ -103,16 +112,44 @@ namespace GeneticAlgoCore
         }
 
         /// <summary>
-        /// Randomly selects two parents from <see cref="availableParents"/> and blends their traits to create a new crossover individual
+        /// Creates a new crossover individual by blending the traits of <paramref name="parent1"/> and <paramref name="parent2"/>
         /// </summary>
-        protected abstract TIndividual CreateCrossover(List<TIndividual> availableParents);
-        
+        protected abstract TIndividual CreateCrossover(TIndividual parent1, TIndividual parent2);
         
         /// <summary>
-        /// Randomly selects one parent from <see cref="availableParents"/> and randomly tweaks its traits to create a new mutant individual
+        /// Creates a new mutant individual by randomly tweaking <paramref name="parent"/>'s traits
         /// </summary>
-        protected abstract TIndividual CreateMutant(List<TIndividual> availableParents);
-        
-        
+        protected abstract TIndividual CreateMutant(TIndividual parent);
+
+        // todo: test distribution on this and move it to the RK Unity toolkit if it's good
+        private List<T> ChooseNRandomElements<T>(List<T> elements, int numElements, System.Random random = null)
+        {
+            if (numElements > elements.Count)
+            {
+                throw new ArgumentOutOfRangeException("Cannot choose " + numElements + " random elements from a list with " + elements.Count + " elements");
+            }
+            
+            int numerator = numElements;
+            int denominator = elements.Count;
+            List<T> results = new();
+            random ??= new System.Random(DateTime.Now.Millisecond);
+            
+            for (int i = 0; i < elements.Count; i++)
+            {
+                if (random.NextDouble() <= (float)numerator / denominator)
+                {
+                    results.Add(elements[i]);
+                    numerator--;
+                    if (numerator == 0)
+                    {
+                        break;
+                    }
+                }
+
+                denominator--;
+            }
+
+            return results;
+        }
     }
 }

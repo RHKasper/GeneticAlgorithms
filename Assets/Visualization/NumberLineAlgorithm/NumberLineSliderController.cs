@@ -69,7 +69,7 @@ namespace Visualization.NumberLineAlgorithm
             _initial = _target;
             _target = newTarget;
             _timeElapsedForCurrentValue = 0;
-            SetColors(newTarget.Type);
+            SetColors(newTarget);
         }
         
         private void SetValue(float value)
@@ -78,17 +78,9 @@ namespace Visualization.NumberLineAlgorithm
             text.text = Math.Round(value, 3).ToString(CultureInfo.InvariantCulture);
         }
 
-        private void SetColors(GeneticIndividual.IndividualType type)
+        private void SetColors(GeneticValueMatcherIndividual individual)
         {
-            Color color = type switch
-            {
-                GeneticIndividual.IndividualType.Initial => Color.white,
-                GeneticIndividual.IndividualType.Elite => Color.cyan,
-                GeneticIndividual.IndividualType.Crossover => Color.yellow,
-                GeneticIndividual.IndividualType.Mutant => Color.green,
-                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
-            };
-
+            var color = individual.GetColor();
             fill.color = color;
             handle.color = color;
         }
