@@ -15,6 +15,8 @@ namespace TerrainMinMaxTest
         public TerrainCollider TerrainCollider { get; private set; }
         public Vector2 TerrainDimensions => TerrainCollider.transform.localScale * TerrainSize;
         
+        private LayerMask _layerMask = LayerMask.GetMask("Terrain");
+        
         public GeneticTerrainMinMaxFinder(int populationSize, MinOrMax minOrMax, TerrainCollider terrainCollider) : base(CreateInitialPopulation(populationSize, terrainCollider.transform.position, terrainCollider.transform.localScale * TerrainSize))
         {
             MinimumOrMaximum = minOrMax;
@@ -28,17 +30,20 @@ namespace TerrainMinMaxTest
 
         protected override float GetIndividualFitness(Individual individual)
         {
-            Vector3 raycastOrigin = individual.XZCoords.XOY().WithY(Random.Range(-100, 100));
-            if(Physics.Raycast(raycastOrigin, Vector3.up, out var upHit))
+            Vector3 raycastOrigin = individual.XZCoords.XOY().WithY(10000);
+            //
+            // Debug.Break();
+            // Debug.DrawLine(raycastOrigin, raycastOrigin + Vector3.up * 1000, Color.green);
+            // Debug.DrawLine(raycastOrigin, raycastOrigin + Vector3.down * 1000, Color.yellow);
+            float score = int.MinValue;
+            
+            if(Physics.Raycast(raycastOrigin, Vector3.down, out var upHit, 100000, _layerMask))
             {
-                return MinimumOrMaximum == MinOrMax.Max ? upHit.point.y : -upHit.point.y;
-            }
-            else if (Physics.Raycast(raycastOrigin, Vector3.up, out var downHit))
-            {
-                return MinimumOrMaximum == MinOrMax.Max ? downHit.point.y : -downHit.point.y;
+                score = MinimumOrMaximum == MinOrMax.Max ? upHit.point.y : -upHit.point.y;
             }
 
-            return int.MinValue;
+            Debug.Log(individual.XZCoords + " Receives fitness score: " + score);
+            return score;
         }
 
         protected override Individual CreateCrossover(Individual parent1, Individual parent2)
@@ -59,7 +64,7 @@ namespace TerrainMinMaxTest
             
             for (int i = 0; i < populationSize; i++)
             {
-                Vector2 point = centerPoint + Random.insideUnitCircle.Multiply(terrainDimensions);
+                Vector2 point = centerPoint + new Vector2(terrainDimensions.x * Random.Range(-.5f, .5f), terrainDimensions.y * Random.Range(-.5f, .5f));
                 individuals.Add(new Individual(point, GeneticIndividual.IndividualType.Initial));
             }
 
@@ -83,6 +88,11 @@ namespace TerrainMinMaxTest
             public override GeneticIndividual DeepCopy(IndividualType type)
             {
                 return new Individual(XZCoords, type);
+            }
+
+            public override string ToString()
+            {
+                return "Individual: " + Type + " - " + XZCoords;
             }
         }
     }

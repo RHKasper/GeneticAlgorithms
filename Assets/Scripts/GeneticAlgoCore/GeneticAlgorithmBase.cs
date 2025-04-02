@@ -39,7 +39,7 @@ namespace GeneticAlgoCore
             {
                 fitnesses.Add(new Tuple<float, TIndividual>(GetIndividualFitness(individual), individual));
             }
-            fitnesses.Sort((f1, f2) => f1.Item1.CompareTo(f2.Item1));
+            fitnesses.Sort((f1, f2) => -f1.Item1.CompareTo(f2.Item1));
             
             // create next generation
             Individuals = CreateNextGeneration(fitnesses); 
@@ -78,11 +78,13 @@ namespace GeneticAlgoCore
             {
                 if (i < EliteCount)
                 {
+                    Debug.Log("Keeping as elite: " + fitnesses[i]);
                     nextGeneration.Add((TIndividual)fitnesses[i].Item2.DeepCopy(GeneticIndividual.IndividualType.Elite));
                 }
 
                 if (i < parentsCount)
                 {
+                    Debug.Log("Using as parent: " + fitnesses[i]);
                     parents.Add(fitnesses[i].Item2);
                 }
             }
@@ -95,6 +97,7 @@ namespace GeneticAlgoCore
             {
                 List<TIndividual> chosenParents = ChooseNRandomElements(parents, 2);
                 nextGeneration.Add(CreateCrossover(chosenParents[0], chosenParents[1]));
+                Debug.Log("Created " + nextGeneration.Last() + " as crossover between " + chosenParents[0] + " and " + chosenParents[1]);
             }
 
             Assert.AreEqual(EliteCount + crossoverCount, nextGeneration.Count);
@@ -104,6 +107,7 @@ namespace GeneticAlgoCore
             {
                 TIndividual chosenParent = parents[Random.Range(0, parents.Count)];
                 nextGeneration.Add(CreateMutant(chosenParent));
+                Debug.Log("Created " + nextGeneration.Last() + " as mutant from " + chosenParent);
             }
             Assert.AreEqual(EliteCount + crossoverCount + mutantCount, nextGeneration.Count);
             Assert.AreEqual(population, nextGeneration.Count);

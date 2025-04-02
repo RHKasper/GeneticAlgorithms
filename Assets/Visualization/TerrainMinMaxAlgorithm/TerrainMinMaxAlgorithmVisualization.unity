@@ -302,7 +302,7 @@ Camera:
   far clip plane: 3000
   field of view: 60
   orthographic: 0
-  orthographic size: 5
+  orthographic size: 520
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -326,8 +326,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1857637523}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 500, y: 1500, z: 500}
+  m_LocalRotation: {x: 0.3576168, y: 0.51890904, z: -0.25279865, w: 0.73412293}
+  m_LocalPosition: {x: -297.95837, y: 1080.7664, z: 220.73328}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -408,7 +408,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   terrainCollider: {fileID: 2076058036}
   numberOfGenerations: 25
-  populationSize: 25
+  populationSize: 100
 --- !u!4 &1989884263
 Transform:
   m_ObjectHideFlags: 0
@@ -435,7 +435,7 @@ GameObject:
   - component: {fileID: 2076058038}
   - component: {fileID: 2076058037}
   - component: {fileID: 2076058036}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -24,7 +24,7 @@ namespace ValueMatcherTest
 
         protected override float GetIndividualFitness(GeneticValueMatcherIndividual individual)
         {
-            return Mathf.Abs(TargetValue - individual.Value);
+            return -Mathf.Abs(TargetValue - individual.Value);
         }
 
         private static HashSet<GeneticValueMatcherIndividual> GenerateInitialPopulation(int populationSize, float min, float max)

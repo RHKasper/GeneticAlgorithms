@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TerrainMinMaxTest;
 using UnityEngine;
@@ -24,6 +25,7 @@ namespace Visualization.TerrainMinMaxAlgorithm
             for (int i = 0; i < populationSize; i++)
             {
                 _spheres.Add(GameObject.CreatePrimitive(PrimitiveType.Sphere).GetComponent<MeshRenderer>());
+                _spheres[^1].transform.localScale = new Vector3(15, 15, 15);
             }
         }
 
