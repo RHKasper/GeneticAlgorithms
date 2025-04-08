@@ -47,6 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 560b1aba9d2392b45976881b4c7d6b8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rearSegment: {fileID: 4695553885007162714}
+  frontSegment: {fileID: 4173752480503753765}
 --- !u!1 &1984367447781557558
 GameObject:
   m_ObjectHideFlags: 0
