@@ -46,28 +46,31 @@ namespace GeneticAlgorithms
         protected override async Task RunGenerationalFitnessTest()
         {
             Debug.Log(Individuals.Count + " individuals");
-            List<InchwormTestCaseController> testCases = new(); 
+            Dictionary<Individual, InchwormTestCaseController> testCases = new(); 
             
             foreach (Individual individual in Individuals)
             {
-                testCases.Add(Object.Instantiate(testCasePrefab));
-                testCases.Last().transform.position = Vector3.zero + testCases.Count * verticalSpacing * Vector3.up;
-                testCases.Last().Init(individual);
+                var testCase = Object.Instantiate(testCasePrefab);
+                testCases.Add(individual, testCase);
+                testCase.transform.position = Vector3.zero + testCases.Count * verticalSpacing * Vector3.up;
+                testCase.Init(individual);
+
+                individual.StartingPosition = testCase.transform.position;
+                individual.StartingForwardVector = testCase.transform.forward;
             }
 
             await Task.Delay((int)(TestCaseDurationSeconds*1000));
 
-            for (var i = testCases.Count - 1; i >= 0; i--)
+            foreach (Individual individual in Individuals)
             {
-                Object.Destroy(testCases[i].gameObject);
+                individual.EndingPosition = testCases[individual].transform.position;
+                Object.Destroy(testCases[individual]);
             }
         }
 
         protected override float GetIndividualFitness(Individual individual)
         {
-            //Vector3 targetDirection =  
-            //return 
-            throw new NotImplementedException();
+            return (individual.EndingPosition - individual.StartingPosition).sqrMagnitude;
         }
 
         protected override Individual CreateCrossover(Individual parent1, Individual parent2)
@@ -85,6 +88,9 @@ namespace GeneticAlgorithms
         {
             public List<float> RearSegmentVelocityFrames;
             public List<float> FrontSegmentVelocityFrames;
+            public Vector3 StartingPosition;
+            public Vector3 StartingForwardVector;
+            public Vector3 EndingPosition;
 
             public Individual(IndividualType individualType, int numFrames) : base(individualType)
             {
