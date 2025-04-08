@@ -28,6 +28,7 @@ namespace Visualization.InchwormAlgorithm
         public void Init(GeneticInchwormMovementAlgorithm.Individual individual)
         {
             _individual = individual;
+            inchworm.SetColor(individual.GetColor());
         }
     }
 }

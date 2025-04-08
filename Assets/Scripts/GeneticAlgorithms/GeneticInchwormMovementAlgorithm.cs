@@ -39,8 +39,8 @@ public class GeneticInchwormMovementAlgorithm : GeneticAlgorithmBase<GeneticInch
 
             for (int frame = 0; frame < numFrames; frame++)
             {
-                individual.FrontSegmentVelocityFrames.Add(Random.Range(motorVelocityRange.x, motorVelocityRange.y));
-                individual.RearSegmentVelocityFrames.Add(Random.Range(motorVelocityRange.x, motorVelocityRange.y));
+                individual.FrontSegmentVelocityFrames[frame] = Random.Range(motorVelocityRange.x, motorVelocityRange.y);
+                individual.RearSegmentVelocityFrames[frame] = Random.Range(motorVelocityRange.x, motorVelocityRange.y);
             }
 
             population.Add(individual);
@@ -70,7 +70,7 @@ public class GeneticInchwormMovementAlgorithm : GeneticAlgorithmBase<GeneticInch
         foreach (Individual individual in Individuals)
         {
             individual.EndingPosition = testCases[individual].transform.position;
-            Object.Destroy(testCases[individual]);
+            Object.Destroy(testCases[individual].gameObject);
         }
     }
 
@@ -81,20 +81,28 @@ public class GeneticInchwormMovementAlgorithm : GeneticAlgorithmBase<GeneticInch
 
     protected override Individual CreateCrossover(Individual parent1, Individual parent2)
     {
-        throw new System.NotImplementedException();
+        var crossover = new Individual(GeneticIndividual.IndividualType.Crossover, numFrames, frameDurationSeconds);
+
+        for (int i = 0; i < numFrames; i++)
+        {
+            crossover.FrontSegmentVelocityFrames[i] = (parent1.FrontSegmentVelocityFrames[i] + parent2.FrontSegmentVelocityFrames[i]) / 2f;
+            crossover.RearSegmentVelocityFrames[i] = (parent1.RearSegmentVelocityFrames[i] + parent2.RearSegmentVelocityFrames[i]) / 2f;
+        }
+
+        return crossover;
     }
 
     protected override Individual CreateMutant(Individual parent)
     {
-        throw new System.NotImplementedException();
+        return (Individual) parent.DeepCopy(GeneticIndividual.IndividualType.Mutant);
     }
 
 
     public class Individual : GeneticIndividual
     {
         public readonly float FrameDuration;
-        public List<float> RearSegmentVelocityFrames;
-        public List<float> FrontSegmentVelocityFrames;
+        public float[] RearSegmentVelocityFrames;
+        public float[] FrontSegmentVelocityFrames;
         
         public Vector3 StartingPosition; // todo: make these fields internal
         public Vector3 StartingForwardVector;
@@ -103,16 +111,16 @@ public class GeneticInchwormMovementAlgorithm : GeneticAlgorithmBase<GeneticInch
         public Individual(IndividualType individualType, int numFrames, float frameDuration) : base(individualType)
         {
             this.FrameDuration = frameDuration;
-            RearSegmentVelocityFrames = new List<float>(numFrames);
-            FrontSegmentVelocityFrames = new List<float>(numFrames);
+            RearSegmentVelocityFrames = new float[numFrames];
+            FrontSegmentVelocityFrames = new float[numFrames];
         }
 
         public override GeneticIndividual DeepCopy(IndividualType type)
         {
-            return new Individual(type, RearSegmentVelocityFrames.Count, FrameDuration)
+            return new Individual(type, RearSegmentVelocityFrames.Length, FrameDuration)
             {
-                RearSegmentVelocityFrames = RearSegmentVelocityFrames.ToList(),
-                FrontSegmentVelocityFrames = FrontSegmentVelocityFrames.ToList()
+                RearSegmentVelocityFrames = RearSegmentVelocityFrames.ToArray(),
+                FrontSegmentVelocityFrames = FrontSegmentVelocityFrames.ToArray()
             };
         }
     }

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using GeneticAlgorithms;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -6,6 +7,7 @@ namespace Visualization.InchwormAlgorithm
 {
     public class InchwormAlgorithmVisualizationController : MonoBehaviour
     {
+        [SerializeField] private int numGenerations = 20;
         [SerializeField] private int populationSize = 20;
         [SerializeField] private float frameDurationSeconds = .25f;
         [SerializeField] private int frameCount = 20;
@@ -21,7 +23,11 @@ namespace Visualization.InchwormAlgorithm
         async void Start()
         {
             _algorithm = new GeneticInchwormMovementAlgorithm(frameDurationSeconds, frameCount, motorVelocityRange, testCasePrefab, verticalSpacingMeters, populationSize);
-            await _algorithm.RunGeneration();
+
+            for (int i = 0; i < numGenerations; i++)
+            {
+                await _algorithm.RunGeneration();
+            }
         }
     }
 }

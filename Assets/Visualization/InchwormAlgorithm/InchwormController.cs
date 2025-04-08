@@ -19,6 +19,12 @@ namespace Visualization.InchwormAlgorithm
             var temp = rearSegment.motor;
             temp.targetVelocity = value;
             rearSegment.motor = temp;
-        } 
+        }
+
+        public void SetColor(Color color)
+        {
+            rearSegment.GetComponent<MeshRenderer>().material.color = color;
+            frontSegment.GetComponent<MeshRenderer>().material.color = color;
+        }
     }
 }
