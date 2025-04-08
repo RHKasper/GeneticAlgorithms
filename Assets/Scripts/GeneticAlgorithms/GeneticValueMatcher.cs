@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace ValueMatcherTest
 {
-    public class GeneticValueMatcher : GeneticAlgorithmBase<GeneticValueMatcherIndividual>
+    public class GeneticValueMatcher : GeneticAlgorithmBase<GeneticValueMatcher.GeneticValueMatcherIndividual>
     {
         public const float Range = 20;
         public const float MaxMutationFraction = .1f;
@@ -49,6 +49,21 @@ namespace ValueMatcherTest
             float mutationDelta = Range * mutationFraction;
 
             return new GeneticValueMatcherIndividual(parent.Value + mutationDelta, GeneticIndividual.IndividualType.Mutant);
+        }
+        
+        public class GeneticValueMatcherIndividual : GeneticIndividual
+        {
+            public float Value;
+
+            public GeneticValueMatcherIndividual(float value, IndividualType individualType) : base(individualType)
+            {
+                Value = value;
+            }
+
+            public override GeneticIndividual DeepCopy(IndividualType type)
+            {
+                return new GeneticValueMatcherIndividual(Value, type);
+            }
         }
     }
 }

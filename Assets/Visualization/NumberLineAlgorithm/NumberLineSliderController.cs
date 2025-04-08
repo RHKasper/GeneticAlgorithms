@@ -11,7 +11,7 @@ using ValueMatcherTest;
 
 namespace Visualization.NumberLineAlgorithm
 {
-    public class NumberLineSliderController : GenericListDisplay.ListItemController<GeneticValueMatcherIndividual>
+    public class NumberLineSliderController : GenericListDisplay.ListItemController<GeneticValueMatcher.GeneticValueMatcherIndividual>
     {
         private const float EasingDurationSeconds = .5f;
         private const float PauseDurationSeconds = .5f;
@@ -21,17 +21,17 @@ namespace Visualization.NumberLineAlgorithm
         [SerializeField] private Image fill;
         [SerializeField] private TextMeshProUGUI text;
 
-        private readonly Queue<GeneticValueMatcherIndividual> _valuesToShow = new();
+        private readonly Queue<GeneticValueMatcher.GeneticValueMatcherIndividual> _valuesToShow = new();
         private float _timeElapsedForCurrentValue;
-        private GeneticValueMatcherIndividual _target;
-        private GeneticValueMatcherIndividual _initial;
+        private GeneticValueMatcher.GeneticValueMatcherIndividual _target;
+        private GeneticValueMatcher.GeneticValueMatcherIndividual _initial;
 
         private void Start()
         {
             SetValue(0);
         }
 
-        protected override void OnDataSet(GeneticValueMatcherIndividual data)
+        protected override void OnDataSet(GeneticValueMatcher.GeneticValueMatcherIndividual data)
         {
             if (_target != null)
             {
@@ -64,7 +64,7 @@ namespace Visualization.NumberLineAlgorithm
             }
         }
 
-        private void SetTarget(GeneticValueMatcherIndividual newTarget)
+        private void SetTarget(GeneticValueMatcher.GeneticValueMatcherIndividual newTarget)
         {
             _initial = _target;
             _target = newTarget;
@@ -78,7 +78,7 @@ namespace Visualization.NumberLineAlgorithm
             text.text = Math.Round(value, 3).ToString(CultureInfo.InvariantCulture);
         }
 
-        private void SetColors(GeneticValueMatcherIndividual individual)
+        private void SetColors(GeneticValueMatcher.GeneticValueMatcherIndividual individual)
         {
             var color = individual.GetColor();
             fill.color = color;
