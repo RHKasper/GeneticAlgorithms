@@ -11,9 +11,9 @@ namespace GeneticAlgoCore
 {
     public abstract class GeneticAlgorithmBase<TIndividual> where TIndividual : GeneticIndividual
     {
-        public int EliteCount = 2;
-        public float CrossoverFraction = .8f;
-        public float ParentsFraction = .5f;
+        public readonly int EliteCount = 2;
+        public readonly float CrossoverFraction = .8f;
+        public readonly float ParentsFraction = .5f;
         protected IReadOnlyCollection<TIndividual> Individuals;
 
         public int CurrentGenerationNumber { get; private set; } = 0;
