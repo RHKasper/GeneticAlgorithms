@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using GeneticAlgoCore;
 using UnityEngine;
 
-namespace ValueMatcherTest
+namespace GeneticAlgorithms
 {
     public class GeneticValueMatcher : GeneticAlgorithmBase<GeneticValueMatcher.GeneticValueMatcherIndividual>
     {

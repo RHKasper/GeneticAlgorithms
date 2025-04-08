@@ -5,7 +5,7 @@ using UnityEngine;
 using Vector2Extensions;
 using Vector3Extensions;
 
-namespace TerrainMinMaxTest
+namespace GeneticAlgorithms
 {
     public class GeneticTerrainMinMaxFinder : GeneticAlgorithmBase<GeneticTerrainMinMaxFinder.Individual>
     {

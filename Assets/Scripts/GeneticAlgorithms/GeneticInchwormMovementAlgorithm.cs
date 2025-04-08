@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GeneticAlgoCore;
 
-namespace InchwormTest
+namespace GeneticAlgorithms
 {
     public class GeneticInchwormMovementAlgorithm : GeneticAlgorithmBase<GeneticInchwormMovementAlgorithm.Individual>
     {

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using Easing;
 using GeneticAlgoCore;
+using GeneticAlgorithms;
 using RKUnityToolkit.UIElements;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using ValueMatcherTest;
 
 namespace Visualization.NumberLineAlgorithm
 {
