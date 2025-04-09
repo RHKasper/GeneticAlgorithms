@@ -18,7 +18,7 @@ namespace Visualization.InchwormAlgorithm
                 throw new Exception("Individual is null");
             }
 
-            int frame = (int)(_elapsedTime / _individual.FrameDuration);
+            int frame = (int)Mathf.Clamp(_elapsedTime / _individual.FrameDuration, 0, _individual.FrontSegmentVelocityFrames.Length-1);
             inchworm.SetFrontSegmentTargetVelocity(_individual.FrontSegmentVelocityFrames[frame]);
             inchworm.SetRearSegmentTargetVelocity(_individual.RearSegmentVelocityFrames[frame]);
             

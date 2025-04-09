@@ -76,7 +76,7 @@ public class GeneticInchwormMovementAlgorithm : GeneticAlgorithmBase<GeneticInch
 
     protected override float GetIndividualFitness(Individual individual)
     {
-        return (individual.EndingPosition - individual.StartingPosition).sqrMagnitude;
+        return Vector3.Dot(individual.EndingPosition - individual.StartingPosition, individual.StartingForwardVector);
     }
 
     protected override Individual CreateCrossover(Individual parent1, Individual parent2)
@@ -94,7 +94,18 @@ public class GeneticInchwormMovementAlgorithm : GeneticAlgorithmBase<GeneticInch
 
     protected override Individual CreateMutant(Individual parent)
     {
-        return (Individual) parent.DeepCopy(GeneticIndividual.IndividualType.Mutant);
+        var mutant = (Individual)parent.DeepCopy(GeneticIndividual.IndividualType.Mutant);
+        float sigma = Mathf.Abs(motorVelocityRange.y - motorVelocityRange.x) / 4;
+        float mu = (motorVelocityRange.y + motorVelocityRange.x) / 2;
+        
+        
+        for (int i = 0; i < numFrames; i++)
+        {
+            mutant.FrontSegmentVelocityFrames[i] += NextGaussian(mu, sigma);
+            mutant.RearSegmentVelocityFrames[i] += NextGaussian(mu, sigma);
+        }
+
+        return mutant;
     }
 
 

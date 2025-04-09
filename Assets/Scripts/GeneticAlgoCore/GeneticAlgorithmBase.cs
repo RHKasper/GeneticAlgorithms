@@ -11,9 +11,9 @@ namespace GeneticAlgoCore
 {
     public abstract class GeneticAlgorithmBase<TIndividual> where TIndividual : GeneticIndividual
     {
-        public readonly int EliteCount = 2;
+        public readonly int EliteCount = 8;
         public readonly float CrossoverFraction = .8f;
-        public readonly float ParentsFraction = .5f;
+        public readonly float ParentsFraction = .3f;
         protected IReadOnlyCollection<TIndividual> Individuals;
 
         public int CurrentGenerationNumber { get; private set; } = 0;
@@ -154,6 +154,26 @@ namespace GeneticAlgoCore
             }
 
             return results;
+        }
+        
+        /// <summary>
+        /// Generates normally distributed numbers. Each operation makes two Gaussians for the price of one, and apparently they can be cached or something for better performance, but who cares.
+        /// Source: https://bitbucket.org/Superbest/superbest-random/src/master/Superbest%20random/RandomExtensions.cs
+        /// </summary>
+        /// <param name = "mu">Mean of the distribution</param>
+        /// <param name = "sigma">Standard deviation</param>
+        /// <returns></returns>
+        public static float NextGaussian(float mu = 0, float sigma = 1)
+        {
+            var u1 = Random.value;
+            var u2 = Random.value;
+
+            var rand_std_normal = Mathf.Sqrt(-2.0f * Mathf.Log(u1)) *
+                                  Mathf.Sin(2.0f * Mathf.PI * u2);
+
+            var rand_normal = mu + sigma * rand_std_normal;
+
+            return rand_normal;
         }
     }
 }

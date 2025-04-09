@@ -454,10 +454,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2457cac37f79ab140beaede106c151d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  populationSize: 20
+  numGenerations: 20
+  populationSize: 1000
   frameDurationSeconds: 0.25
   frameCount: 20
   verticalSpacingMeters: 4
+  motorVelocityRange: {x: -200, y: 200}
   testCasePrefab: {fileID: 7324458426016877611, guid: d5ec883b084f3fe48a15c3086b77aea1, type: 3}
 --- !u!4 &677383832
 Transform:
